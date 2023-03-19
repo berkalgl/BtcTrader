@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.11.10-management
+    ports:
+     - "5672:5672"
+     - "15672:15672"
+  instruction.api:
+    image: ${DOCKER_REGISTRY-}instructionapi
+    build:
+      context: .
+      dockerfile: Services/Instruction/Instruction.API/Dockerfile
+    depends_on:
+     - rabbitmq
+  notification.consumer:
+    image: ${DOCKER_REGISTRY-}notificationconsumer
+    build:
+      context: .
+      dockerfile: Services/Notification/Notification.Consumer/Dockerfile
+    depends_on:
+     - rabbitmq
+
